@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/ilyakaznacheev/cleanenv"
+	"github.com/joho/godotenv"
 )
 
 // config.go - for parsing of config yaml file
@@ -23,6 +24,10 @@ type HTTPServer struct {
 
 
 func MustLoad() *Config{
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatalf("env file is empty or not found")
+	}
 	configPath := os.Getenv("CONFIG_PATH")
 	if configPath == "" {
 		log.Fatal("CONFIG_PATH is not set")
@@ -30,7 +35,7 @@ func MustLoad() *Config{
 
 	// check if file exists
 	if _, err := os.Stat(configPath); os.IsNotExist(err) {
-		log.Fatalf("config file dows not existЖ %s", configPath)
+		log.Fatalf("config file does not exist: %s", configPath)
 	}
 
 	var cfg Config
