@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"urlsh/internal/config"
+	"urlsh/internal/http-server/handlers/url/redirect"
 	"urlsh/internal/http-server/handlers/url/save"
 	"urlsh/internal/lib/logger/sl"
 	"urlsh/internal/storage/sqlite"
@@ -38,12 +39,21 @@ func main() {
 
 	router.Use(middleware.RequestID)
 	router.Use(middleware.Logger)
+	router.Use(middleware.URLFormat)
 	
+	router.Route("/url", func(r chi.Router) {
+		r.Use(middleware.BasicAuth("url-shortener", map[string]string {
+			cfg.HTTPServer.User: cfg.HTTPServer.Password,
+		}))
 
-	// TODO: init router: chi :- полная совместимость с net/http
-	//	  chi/render - пакет для рендера
-
+		r.Post("/", save.New(log, storage))
+		// TODO: add DELETE /url/{id}
+	})
+	
 	router.Post("/url", save.New(log, storage))
+	router.Get("/{alias}", redirect.New(log, storage))
+	// TODO: create Delete handler
+	// router.Delete("/url/{alias}", )
 
 	log.Info("starting server", slog.String("address", cfg.Address))
 	

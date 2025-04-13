@@ -27,7 +27,7 @@ type Response struct {
 // TODO: move to config
 const aliasLength = 6
 
-//go:generate mockery --name=URLSaver --output=./mocks --case=underscore
+//go:generate moq -out URLSaver.go . URLSaver
 type URLSaver interface {
 	SaveURL(urlToSave string, alias string) (int64, error)
 }
