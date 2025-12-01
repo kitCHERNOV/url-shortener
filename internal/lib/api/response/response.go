@@ -6,8 +6,10 @@ type Response struct {
 }
 
 const (
-	StatusOK = "OK"
-	StatusError = "Error"
+	StatusOK                  = "OK"
+	StatusError               = "Error"
+	StatusBadRequestError     = "Bad Request Error"
+	StatusInternalServerError = "Internal Server Error"
 )
 
 func OK() Response {
@@ -19,7 +21,21 @@ func OK() Response {
 func Error(msg string) Response {
 	return Response{
 		Status: StatusError,
-		Error: msg,
+		Error:  msg,
+	}
+}
+
+func BadRequestError(msg string) Response {
+	return Response{
+		Status: StatusBadRequestError,
+		Error:  msg,
+	}
+}
+
+func InternalServerError(msg string) Response {
+	return Response{
+		Status: StatusInternalServerError,
+		Error:  msg,
 	}
 }
 

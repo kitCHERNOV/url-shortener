@@ -1,0 +1,16 @@
+all: false
+dir: '{{.}}'
+filename: URLSaver.go
+force-file-write: false
+formatter: goimports
+log-level: info
+structname: '{{.Mock}}{{.InterfaceName}}'
+pkgname: '{{.mocks}}'
+recursive: false
+require-template-schema-exists: true
+template: testify
+template-schema: '{{.Template}}.schema.json'
+packages:
+  save:
+    config:
+      all: true
